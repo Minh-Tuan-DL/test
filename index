@@ -1,0 +1,801 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="vi" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+  <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+</head>
+<body>
+   <div id="loginPage" class="container">
+     <div class="wrap mt-4">
+        <div class="title"><img src="https://cdn-icons-png.freepik.com/512/295/295128.png" style="width:60px;"></div>
+        <h4 class="text-center mb-3 mt-2">Đăng Nhập Hệ Thống</h4>
+        <form id="loginForm">
+          <div class="row">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" placeholder="Email đăng nhập" required>
+          </div>
+          <div class="row">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+          </div>
+          <div class="remember-me">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <label for="rememberMe">Nhớ đăng nhập</label>
+          </div>
+          <div class="pass mt-2"><a href="#">Quên mật khẩu?</a></div>
+          <div class="row button">
+            <button type="submit">Đăng Nhập
+          </div>
+        </form>
+      </div>
+  </div>
+
+  <div class="wrapper" style="display:none;">
+        <aside id="sidebar" class="js-sidebar">
+            <!-- Content For Sidebar -->
+            <div class="h-100">
+                <div class="sidebar-logo">
+                    <a href="#" style="font-size: 17px;">QUẢN LÝ</a>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                           <i class="fa-solid fa-house"></i>
+                            Trang chủ
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showDashboardAndUserData()">
+                            <i class="fa-solid fa-list pe-2"></i>
+                            Giáo viên
+                        </a>
+                    </li>                    
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showContent('dataKH')">
+                            <i class="fa-solid fa-list pe-2"></i>
+                            Học viên
+                        </a>
+                    </li>                   
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showContent('dataLH')">
+                            <i class="fa-solid fa-list pe-2"></i>
+                            Lịch học
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showContent('dataPending')">
+                            <i class="fas fa-file-lines pe-2"></i>
+                            Đang xử lý
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showContent('dataApproved')">
+                            <i class="fas fa-check pe-2"></i>
+                            Phê duyệt
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" onclick="showContent('dataDisapproved')">
+                            <i class="fas fa-times pe-2"></i>
+                            Huỷ bỏ
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-target="#multi" data-bs-toggle="collapse" aria-expanded="false"><i class="fa-solid fa-share-nodes pe-2"></i>
+                            Danh mục cài đặt
+                        </a>
+                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                          <li class="sidebar-item">
+                              <a href="#" class="sidebar-link collapsed" onclick="showContent('dataClass')">Lớp học</a>
+                          </li>
+                          <li class="sidebar-item">
+                              <a href="#" class="sidebar-link collapsed" onclick="showContent('dataRoom')">Phòng học</a>
+                          </li>
+                          <li class="sidebar-item">
+                              <a href="#" class="sidebar-link collapsed" onclick="showContent('dataCa')">Ca học</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+      </aside>
+ 
+      <div class="main">
+           <nav class="navbar navbar-expand px-3 border-bottom">
+              <button class="btn" id="sidebar-toggle" type="button">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="navbar-brand">
+                  <span id="blinkDots">Hello</span>
+              </div>
+              <div class="navbar-collapse navbar">
+                  <ul class="navbar-nav">
+                      <li class="nav-item dropdown d-flex align-items-center">
+                          <span id="user-name" class="me-2">User Name</span>
+                          <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
+                              <img id="userAvatar" src="https://cdn-icons-png.freepik.com/256/6024/6024190.png?semt=ais_hybrid" class="avatar img-fluid rounded" alt="">
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                              <a href="#" id="logoutLink" class="dropdown-item">Đăng xuất</a>
+                          </div>
+                      </li>
+                  </ul>
+              </div> 
+          </nav>
+          <main class="content px-3 py-2">
+              <div class="container-fluid">
+                  <div id="dashboard" class="content-section">
+                        <div class="mb-3">
+                            <h4>Trang Quản Lý</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 d-flex">
+                                <div class="card flex-fill border-0 illustration">
+                                    <div class="card-body p-0 d-flex flex-fill">
+                                        <div class="row g-0 w-100">
+                                            <div class="col-6">
+                                                <div class="p-3 m-1">
+                                                    <h4>Xin Chào!</h4>
+                                                    <p class="mb-0 mt-3">Thông tin người dùng<br>
+                                                    <span id="user-email" ></span><br>
+                                                    <span id="user-role"></span><br>
+                                                    <span id="user-pass" hidden></span>
+                                                    <span id="user-id" hidden></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 align-self-end text-end">
+                                                <img src="https://admin.vov.gov.vn/UploadFolder/KhoTin/Images/UploadFolder/VOVVN/Images/sites/default/files/styles/large/public/2025-02/sommet_ia_1024x683_20250210064240.png.jpg" class="img-fluid illustration-img" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 d-flex">
+                              <div class="card flex-fill border-0">
+                                  <div class="card-body py-4">
+                                      <div class="d-flex align-items-start">
+                                          <div class="flex-grow-1 stats-box">
+                                              <h4 class="mb-3">Thống kê báo cáo</h4>
+                                              <div class="stats-flex">
+                                                  <div class="stats-label-compact text-warning">Đang xử lý:</div>
+                                                  <div class="stats-value-compact" id="pendingCount">0</div>
+                                              </div>
+                                              <div class="stats-flex">
+                                                  <div class="stats-label-compact text-success">Phê duyệt:</div>
+                                                  <div class="stats-value-compact" id="approvedCount">0</div>
+                                              </div>
+                                              <div class="stats-flex">
+                                                  <div class="stats-label-compact text-danger">Huỷ bỏ:</div>
+                                                  <div class="stats-value-compact" id="disapprovedCount">0</div>
+                                              </div>
+                                              <div class="stats-flex">
+                                                  <div class="stats-label-compact">Tổng cộng:</div>
+                                                  <div class="stats-value-compact" id="totalData">0</div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <!-- User Data -->
+                    <div id="userData" class="content-section">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Danh Sách Người Dùng</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">Thêm Người Dùng</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTable1" class="table display responsive nowrap" style="width:100%">
+                                   <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Email đăng nhập</th>
+                                            <th>Hình ảnh</th>
+                                            <th>Chức vụ</th>
+                                            <th>Bộ phận</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                       </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Học sinh Data -->
+                    <div id="dataKH" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Danh Sách Học Sinh</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addKHModal" id="addBtn">Thêm Học Sinh</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTableKH" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên học sinh</th>
+                                            <th>Giới tính</th>
+                                            <th>Ngày sinh</th>
+                                            <th>Tên phụ huynh</th>
+                                            <th>SĐT phụ huynh</th>
+                                            <th>Email phụ huynh</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ghi chú</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                      </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lớp học Data -->
+                    <div id="dataClass" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Danh Sách Lớp Học</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClassModal" id="addBtn">Thêm Lớp Học</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTableClass" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên lớp</th>
+                                            <th>Ngày bắt đầu</th>
+                                            <th>Ngày kết thúc</th>
+                                            <th>Số buổi học</th>
+                                            <th>Phòng học</th>
+                                            <th>Ca học</th>
+                                            <th>Học phí</th>
+                                            <th>Số lượng học sinh</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                      </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phóng học Data -->
+                    <div id="dataRoom" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Danh Sách Học Sinh</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoomModal" id="addBtn">Thêm Phòng Học</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTableRoom" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên phòng học</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                      </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ca học Data -->
+                    <div id="dataCa" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Danh Sách Ca học</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCaModal" id="addBtn">Thêm Ca học</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTableCa" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên ca học</th>
+                                            <th>Thời gian bắt đầu</th>
+                                            <th>Thời gian kết thúc</th>
+                                            <th>Tên phụ huynh</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                      </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Data -->
+                    <div id="dataPending" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Báo Cáo Đang Xử Lý</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDataModal" id="addBtn">Thêm Báo Cáo</button>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTable2" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Email</th>
+                                            <th>Chức vụ</th>
+                                            <th>Báo cáo</th>
+                                            <th>Tệp</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ghi chú</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                      </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Approved Data -->
+                    <div id="dataApproved" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Báo Cáo Đã Phê Duyệt</h5>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTable3" class="table display responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Email</th>
+                                            <th>Chức vụ</th>
+                                            <th>Báo cáo</th>
+                                            <th>Tệp</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ghi chú</th>
+                                        </tr>
+                                      </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Disapproved Data -->
+                    <div id="dataDisapproved" class="content-section" style="display:none;">
+                        <div class="card border-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Báo Cáo Đã Huỷ Bỏ</h5>
+                            </div>
+                            <div class="card-body">
+                                <table id="dataTable4" class="table display responsive nowrap" style="width:100%">
+                                   <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Email</th>
+                                            <th>Chức vụ</th>
+                                            <th>Báo cáo</th>
+                                            <th>Tệp</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ghi chú</th>
+                                        </tr>
+                                      </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="descriptionModalLabel">Ghi chú</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal thêm Học Sinh -->
+        <div class="modal fade" id="addKHModal" tabindex="-1" aria-labelledby="addKHModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addKHModalLabel">Thêm Học Sinh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="addKHForm">
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <label>Họ và tên Học Sinh</label>
+                      <input type="text" id="khName" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Giới tính</label>
+                      <select id="khGender" name="gender" class="form-select" required>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Ngày sinh</label>
+                      <input type="date" id="khBirthday" name="birthday" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Tên phụ huynh</label>
+                      <input type="text" id="phkhName" name="phkhName" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Email</label>
+                      <input type="email" id="phEmail" name="phEmail" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>SĐT phụ huynh</label>
+                      <input type="number" id="phPhone" name="phone" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Trạng thái</label>
+                      <select id="khStatus" name="status" class="form-select" required>
+                        <option value="Đang chờ lớp">Đang chờ lớp</option>
+                        <option value="Đang học">Đang học</option>
+                        <option value="Bảo lưu">Bảo lưu</option>
+                        <option value="Nghỉ học">Nghỉ học</option>
+                      </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Chi chú</label>
+                      <input type="text" id="khNote" name="khNote" class="form-control">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                  <button type="submit" class="btn btn-primary btn-sm btn-action btn-width-fixed">Thêm</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal sửa học sinh -->
+        <div class="modal fade" id="editKHModal" tabindex="-1" aria-labelledby="editKHModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editKHModalLabel">Sửa thông tin học sinh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editKHForm">
+                  <input type="hidden" id="editKHId" name="id">
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <label>Tên học sinh</label>
+                      <input type="text" id="editKHName" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Giới tính</label>
+                      <select id="editKHGender" name="gender" class="form-select" required>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Ngày sinh</label>
+                      <input type="date" id="editKHBirthday" name="birthday" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Tên phụ huynh</label>
+                      <input type="text" id="editKHphhsName" name="phhsname" class="form-control" required>
+                    </div>                    
+                    <div class="col-md-12 mb-3">
+                      <label>Email</label>
+                      <input type="email" id="editKHEmail" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>SĐT phụ huynh</label>
+                      <input type="number" id="editKHPhone" name="phone" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Trạng thái</label>
+                      <select id="editKHStatus" name="status" class="form-select" required>
+                        <option value="Đang chờ lớp">Đang chờ lớp</option>
+                        <option value="Đang học">Đang học</option>
+                        <option value="Bảo lưu">Bảo lưu</option>
+                        <option value="Nghỉ học">Nghỉ học</option>
+                      </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Chi chú</label>
+                      <input type="text" id="editKHNote" name="note" class="form-control">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                  <button type="submit" class="btn btn-primary btn-sm btn-action btn-width-fixed">Cập nhật</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal thêm công việc -->
+          <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addDataModalLabel">Thêm Báo Cáo</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form id="addDataForm">
+                              <div class="row">
+                                  <div class="col-md-6 mb-3">
+                                      <label>Họ và tên</label>
+                                      <input type="text" id="name" name="name" class="form-control" readonly required>
+                                  </div>
+                                  <div class="col-md-6 mb-3">
+                                      <label>Email</label>
+                                      <input type="email" id="email" name="email" class="form-control" readonly required>
+                                  </div>
+                                  <div class="col-md-6 mb-3">
+                                      <label>Chức vụ</label>
+                                      <select id="position" name="position" class="form-select" required>
+                                          <option value=""></option>
+                                      </select>
+                                  </div>
+                                  <div class="col-md-6 mb-3">
+                                      <label>Báo cáo</label>
+                                      <input type="text" id="report" name="report" class="form-control" required>
+                                  </div>
+                                   <div class="col-md-12 mb-3">
+                                     <label>Tải lên tệp (PDF hoặc hình ảnh)</label>
+                                     <input type="file" id="fileInput" name="myFile" class="form-control" accept=".pdf,image/*">
+                                  </div>
+                                  <div class="col-md-6 mb-3" style="display:none">
+                                      <label>Trạng thái</label>
+                                      <input type="text" id="status" name="status" value="Đang xử lý" class="form-control" required>
+                                  </div>
+                                  <div class="col-md-12 mb-3" style="display:none">
+                                      <label>Ghi chú</label>
+                                      <input type="text" id="description" name="description" value="-" class="form-control" required>
+                                  </div>
+                              </div>
+                              <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                              <button type="submit" class="btn btn-primary btn-sm btn-action btn-width-fixed">Gửi</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+        <!-- Modal sửa công việc -->
+        <div class="modal fade" id="editDataModal" tabindex="-1" aria-labelledby="editDataModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editDataModalLabel">Sửa Báo Cáo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editDataForm" enctype="multipart/form-data">
+                  <input type="hidden" id="editId" name="editId">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label>Họ và tên</label>
+                      <input type="text" id="editName" name="editName" class="form-control" readonly required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Email</label>
+                      <input type="email" id="editEmail" name="editEmail" class="form-control" readonly required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Chức vụ</label>
+                      <select id="editPosition" name="editPosition" class="form-select" required>
+                        <option value=""></option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Báo cáo</label>
+                      <input type="text" id="editReport" name="editReport" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3" style="display:none">
+                      <label>URL Tệp</label>
+                      <input type="text" id="editFile" name="editFile" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3" id="statusContainer" style="display:none">
+                      <label>Trạng thái</label>
+                      <select type="text" id="editStatus" name="editStatus" class="form-control" required>
+                        <option value="Đang xử lý">Đang xử lý</option>
+                        <option value="Phê duyệt">Phê duyệt</option>
+                        <option value="Huỷ bỏ">Huỷ bỏ</option>
+                      </select>
+                    </div>
+                    <div class="col-md-12 mb-3" id="descriptionContainer" style="display:none">
+                      <label>Ghi chú</label>
+                      <textarea type="text" id="editDescription" name="editDescription" class="form-control" required></textarea>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                  <button type="submit" id="editUpdateBtn" class="btn btn-primary btn-sm btn-action btn-width-fixed">Cập nhật</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal thêm người dùng -->
+        <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Thêm Người Dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="addUserForm">
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <label>Họ và tên</label>
+                      <input type="text" id="userName" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Email đăng nhập</label>
+                      <input type="email" id="userEmail" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Mật khẩu</label>
+                      <input type="Text" id="userPassword" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Chức vụ</label>
+                      <select id="userRole" name="role" class="form-select" required>
+                        <option value="Admin">Admin</option>
+                        <option value="Quản lý">Quản lý</option>
+                        <option value="Nhân viên">Nhân viên</option>
+                        <option value="Trợ lý">Trợ lý</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Bộ phận</label>
+                      <select id="userDepartment" name="department" class="form-select" required>
+                        <option value="IT">IT</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Tiếng Anh">Tiếng Anh</option>
+                        <option value="Tư Vấn">Tư Vấn</option>
+                        <option value="Kế Toán">Kế Toán</option>
+                        <option value="Nhân Sự">Nhân Sự</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Số điện thoại</label>
+                      <input type="number" id="userPhoneuser" name="phoneuser" class="form-control" minlength="10" maxlength="10" >
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>URL Hình ảnh</label>
+                      <input type="text" id="userImage" name="image" class="form-control">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                  <button type="submit" class="btn btn-primary btn-sm btn-action btn-width-fixed">Thêm</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal sửa người dùng -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Sửa Người Dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editUserForm">
+                  <input type="hidden" id="editUserId" name="id">
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <label>Họ và tên</label>
+                      <input type="text" id="editUserName" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>Email đăng nhập</label>
+                      <input type="email" id="editUserEmail" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Mật khẩu</label>
+                      <input type="text" id="editUserPassword" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Chức vụ</label>
+                      <select id="editUserRole" name="role" class="form-select" required>
+                        <option value="Admin">Admin</option>
+                        <option value="Quản lý">Quản lý</option>
+                        <option value="Nhân viên">Nhân viên</option>
+                        <option value="Trợ lý">Trợ lý</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Bộ phận</label>
+                      <select id="editUserDepartment" name="department" class="form-select" required>
+                        <option value="IT">IT</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Tiếng Anh">Tiếng Anh</option>
+                        <option value="Tư Vấn">Tư Vấn</option>
+                        <option value="Kế Toán">Kế Toán</option>
+                        <option value="Nhân Sự">Nhân Sự</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label>Số điện thoại</label>
+                      <input type="number" id="editUserPhoneuser" name="phoneuser" class="form-control" minlength="10" maxlength="10">
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <label>URL Hình ảnh</label>
+                      <input type="text" id="editUserImage" name="image" class="form-control">
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Huỷ</button>
+                  <button type="submit" class="btn btn-primary btn-sm btn-action btn-width-fixed">Cập nhật</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Loading overlay chỉ dùng cho đăng nhập -->
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <a href="#" class="theme-toggle">
+          <i class="fas fa-cloud-sun theme-icon-light"></i>
+          <i class="fas fa-cloud-moon theme-icon-dark"></i>
+        </a>
+          
+              <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted align-items-center">
+                        <div class="col-12 col-md-2 text-center text-md-start mb-2 mb-md-0">
+                            <p class="mb-0">
+                                <a href="#" class="text-muted">
+                                    @2025 tuanmtm@tht.edu.vn
+                                </a>
+                            </p>
+                        </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+ <?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?>
+</body>
+</html>
